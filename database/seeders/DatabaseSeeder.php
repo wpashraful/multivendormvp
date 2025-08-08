@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,7 +15,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(AdminUserSeeder::class);
-        $this->call(CategorySeeder::class);
 
         // ✅ প্রথমে ফ্যাক্টরি দিয়ে র‌্যান্ডম ইউজার বানাও
         User::factory(10)->create();
@@ -26,14 +26,13 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test User',
                 'email_verified_at' => now(),
                 'password' => bcrypt('password'),
-                'remember_token' => \Str::random(10),
+                'remember_token' => Str::random(10),
             ]
         );
 
-        // ✅ অন্য Seeder গুলো কল করো
-        $this->call(AdminUserSeeder::class);
-        $this->call(CategorySeeder::class);
-
+        // ✅ Module seeders are called automatically by the modules
+        // CategorySeeder is now handled by Modules\Category
+        // ProductSeeder is now handled by Modules\Product
         
     }
 

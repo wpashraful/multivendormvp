@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -29,8 +30,9 @@
         <aside class="w-64 bg-gray-800 text-white min-h-screen p-4 space-y-2">
             <h2 class="text-lg font-semibold mb-4">Menu</h2>
             <ul class="space-y-2">
-                <li><a href="{{ route('categories.index') }}" class="block p-2 rounded hover:bg-gray-700">📦 Categories</a></li>
+                <li><a href="{{ route('category.index') }}" class="block p-2 rounded hover:bg-gray-700">📦 Categories</a></li>
                 <li><a href="{{ route('products.index') }}" class="block p-2 rounded hover:bg-gray-700">🛒 Products</a></li>
+                <li><a href="{{ route('lottery.index') }}" class="block p-2 rounded hover:bg-gray-700">🎲 Lottery</a></li>
                 <li><a href="#" class="block p-2 rounded hover:bg-gray-700">👥 Users</a></li>
             </ul>
         </aside>

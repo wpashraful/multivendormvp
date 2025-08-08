@@ -7,6 +7,8 @@ export default {
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
     "./resources/**/*.vue",
+    './Modules/*/resources/**/*.blade.php', // Add this line for modules
+    './Modules/*/resources/js/**/*.js',
   ],
 
     theme: {

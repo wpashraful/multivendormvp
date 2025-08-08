@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\admin\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,15 +27,9 @@ Route::middleware('auth')->group(function () {
         return view('seller.dashboard');
     })->name('dashboard');
 
-    // category routes
-    Route::resource('categories', CategoryController::class);
-
-    //product routes
-    // routes/web.php
-    Route::get('products/search', [ProductController::class, 'index'])->name('products.search');
-    Route::resource('products', ProductController::class);
-
-    Route::patch('products/{id}/status', [ProductController::class, 'updateStatus'])->name('products.updateStatus');
+    // Routes are now handled by modules
+    // Categories: Modules\Category
+    // Products: Modules\Product
     
 
 
