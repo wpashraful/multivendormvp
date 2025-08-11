@@ -33,6 +33,7 @@
                 <li><a href="{{ route('category.index') }}" class="block p-2 rounded hover:bg-gray-700">📦 Categories</a></li>
                 <li><a href="{{ route('products.index') }}" class="block p-2 rounded hover:bg-gray-700">🛒 Products</a></li>
                 <li><a href="{{ route('lottery.index') }}" class="block p-2 rounded hover:bg-gray-700">🎲 Lottery</a></li>
+                <li><a href="{{ route('coupon.index') }}" class="block p-2 rounded hover:bg-gray-700">🏷️ Coupon</a></li>
                 <li><a href="#" class="block p-2 rounded hover:bg-gray-700">👥 Users</a></li>
             </ul>
         </aside>

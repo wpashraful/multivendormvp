@@ -11,6 +11,6 @@ class ProductDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        \Modules\Product\Models\Product::factory()->count(20)->create();
     }
 }
