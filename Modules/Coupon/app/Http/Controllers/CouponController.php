@@ -13,11 +13,40 @@ class CouponController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
-        $coupons = Coupon::latest()->paginate(10);
+        $coupons = $this->searchCoupons($request)->latest()->paginate(10)->withQueryString();
+        
+        if ($request->ajax()) {
+            return view('coupon::admin.partials.table', compact('coupons'))->render();
+        }
+        
         return view('coupon::admin.index', compact('coupons'));
+    }
+
+    private function searchCoupons(Request $request)
+    {
+        $query = Coupon::query();
+        
+        if ($request->filled('search')) {
+            $query->where('code', 'like', '%' . $request->search . '%');
+        }
+        
+        if ($request->filled('status')) {
+            switch ($request->status) {
+                case 'active':
+                    $query->where('is_active', true)->where('expires_at', '>', now());
+                    break;
+                case 'inactive':
+                    $query->where('is_active', false);
+                    break;
+                case 'expired':
+                    $query->where('expires_at', '<', now());
+                    break;
+            }
+        }
+        
+        return $query;
     }
 
     /**
@@ -25,7 +54,8 @@ class CouponController extends Controller
      */
     public function create()
     {
-        return view('coupon::admin.create');
+        $lotteries = \Modules\Lottery\Models\Lottery::all();
+        return view('coupon::admin.create', compact('lotteries'));
     }
 
     /**
@@ -55,9 +85,12 @@ class CouponController extends Controller
         $coupons = Coupon::create([
             'code' => $request->input('code'),
             'discount_amount' => $request->input('discount_amount'),
+            'discount_type' => $request->input('discount_type', 'fixed'),
             'valid_from' => $request->input('valid_from'),
             'expires_at' => $request->input('expires_at'),
             'max_usage' => $request->input('max_usage'),
+            'is_active' => $request->has('is_active'),
+            'lottery_id' => $request->input('lottery_id'),
         ]);
 
         return redirect()->route('coupon.index')->with('success', 'Coupon created successfully!');
@@ -68,7 +101,7 @@ class CouponController extends Controller
      */
     public function show($id)
     {
-        $coupon = Coupon::findOrFail($id);
+        $coupon = Coupon::with('lottery', 'user')->findOrFail($id);
         return view('coupon::admin.show', compact('coupon'));
     }
 

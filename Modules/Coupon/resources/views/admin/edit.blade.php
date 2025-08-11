@@ -122,9 +122,9 @@
                         <label for="lottery_id" class="block text-sm font-medium text-gray-700 mb-1">Associated Lottery</label>
                         <select id="lottery_id" name="lottery_id" 
                                 class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="{{ $coupon->lottery_id }}">{{ $coupon->lottery ? $coupon->lottery->title : '' }}</option>
+                            <option value="">Select Lottery (Optional)</option>
                             @foreach($lotteries as $lottery)
-                                 <option value="{{ $lottery->id }}" {{ $coupon->lottery_id == $lottery->id ? 'selected' : '' }}>{{ $lottery->title }}</option>
+                                <option value="{{ $lottery->id }}" {{ $coupon->lottery_id == $lottery->id ? 'selected' : '' }}>{{ $lottery->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -148,7 +148,7 @@
                             <i class="fas fa-save mr-2"></i> Save Changes
                         </button>
                     </form>
-                    <a href="{{ route('coupon.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="{{ url()->previous() }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <i class="fas fa-times mr-2"></i> Cancel
                     </a>
                 </div>
