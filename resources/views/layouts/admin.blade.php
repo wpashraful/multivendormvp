@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel')</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -30,11 +31,11 @@
         <aside class="w-64 bg-gray-800 text-white min-h-screen p-4 space-y-2">
             <h2 class="text-lg font-semibold mb-4">Menu</h2>
             <ul class="space-y-2">
-                <li><a href="{{ route('category.index') }}" class="block p-2 rounded hover:bg-gray-700">📦 Categories</a></li>
-                <li><a href="{{ route('products.index') }}" class="block p-2 rounded hover:bg-gray-700">🛒 Products</a></li>
-                <li><a href="{{ route('lottery.index') }}" class="block p-2 rounded hover:bg-gray-700">🎲 Lottery</a></li>
-                <li><a href="{{ route('coupon.index') }}" class="block p-2 rounded hover:bg-gray-700">🏷️ Coupon</a></li>
-                <li><a href="#" class="block p-2 rounded hover:bg-gray-700">👥 Users</a></li>
+                <li><a href="{{ route('category.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-box mr-2"></i>Categories</a></li>
+                <li><a href="{{ route('products.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-shopping-cart mr-2"></i>Products</a></li>
+                <li><a href="{{ route('lottery.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-dice mr-2"></i>Lottery</a></li>
+                <li><a href="{{ route('coupon.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tags mr-2"></i>Coupon</a></li>
+                <li><a href="#" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i>Users</a></li>
             </ul>
         </aside>
 

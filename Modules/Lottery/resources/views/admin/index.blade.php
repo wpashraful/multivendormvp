@@ -3,67 +3,86 @@
 @section('title', 'Lotteries')
 
 @section('content')
-    
-    {{-- Lotteries Table or Empty State --}}
-    @if(isset($lotteries) && count($lotteries) > 0)
 
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold">Lotteries</h2>
-            <a href="{{ route('lottery.create') }}" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create New Lottery</a>
+
+    <div class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Lottery Management</h1>
+                <p class="text-gray-600">Manage all active and upcoming lotteries</p>
+            </div>
+            <a href="{{ route('lottery.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                <i class="fas fa-plus mr-2"></i> Create New Lottery
+            </a>
         </div>
-        <table class="min-w-full bg-white border border-gray-200 rounded mb-4">
-            <thead>
-                <tr>
-                    <th class="py-2 px-4 border-b">ID</th>
-                    <th class="py-2 px-4 border-b">Title</th>
-                    <th class="py-2 px-4 border-b">Start Date</th>
-                    <th class="py-2 px-4 border-b">End Date</th>
-                    <th class="py-2 px-4 border-b">Active</th>
-                    <th class="py-2 px-4 border-b">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($lotteries as $lottery)
-                    <tr>
-                        <td class="py-2 px-4 border-b">{{ $lottery->id }}</td>
-                        <td class="py-2 px-4 border-b">{{ $lottery->title }}</td>
-                        <td class="py-2 px-4 border-b">{{ $lottery->start_date }}</td>
-                        <td class="py-2 px-4 border-b">{{ $lottery->end_date }}</td>
-                        <td class="py-2 px-4 border-b text-center">
-                            <form action="{{ route('lottery.updateStatus', $lottery->id) }}" method="POST" class="inline-block">
-                                @csrf
-                                @method('PATCH')
-                                <select name="is_active"
-                                    class="pl-4 pr-10 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    onchange="this.form.submit()">
-                                    <option value="1" {{ $lottery->is_active ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ !$lottery->is_active ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                            </form>
-                        </td>
-                        <td class="py-2 px-4 border-b flex gap-2">
-                            {{-- Delete Button --}}
-                            <form action="{{ route('lottery.destroy', $lottery->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this lottery?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="mb-4">
-            {{ $lotteries->links() }}
+
+        <!-- Filters -->
+        <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search" placeholder="Search lotteries..." 
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="w-full md:w-48">
+                    <label for="status" class="sr-only">Status</label>
+                    <select id="status" class="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Status</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">
+                    Filter
+                </button>
+            </div>
         </div>
-        
-    @else
-        <div class="text-center text-gray-500 py-10">
-            <svg class="mx-auto mb-4 w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2a4 4 0 004 4h2a4 4 0 004-4z" /></svg>
-            <p>No lotteries found. Click "Create New Lottery" to create one.</p>
+
+        <!-- Lottery Table -->
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+            <div class="overflow-x-auto" id="lottery-table">
+                @include('lottery::admin.partials.table')
+            </div>
         </div>
-        <div class="flex justify-center items-center mb-4">
-        <a href="{{ route('lottery.create') }}" class="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Create New Lottery</a>
     </div>
-    @endif
+</div>
+    
+   
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const statusSelect = document.getElementById('status');
+    
+    function performSearch() {
+        const search = searchInput.value;
+        const status = statusSelect.value;
+        
+        fetch('{{ route("lottery.search") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ search, status })
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('lottery-table').innerHTML = html;
+        });
+    }
+    
+    searchInput.addEventListener('input', performSearch);
+    statusSelect.addEventListener('change', performSearch);
+});
+</script>

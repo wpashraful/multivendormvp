@@ -3,5 +3,6 @@
     "Tester": true,
     "Category": true,
     "Lottery": true,
-    "Coupon": true
+    "Coupon": true,
+    "Vendor": true
 }

@@ -6,6 +6,7 @@
     2 => 'Modules\\Lottery\\Providers\\LotteryServiceProvider',
     3 => 'Modules\\Product\\Providers\\ProductServiceProvider',
     4 => 'Modules\\Tester\\Providers\\TesterServiceProvider',
+    5 => 'Modules\\Vendor\\Providers\\VendorServiceProvider',
   ),
   'eager' => 
   array (
@@ -14,6 +15,7 @@
     2 => 'Modules\\Lottery\\Providers\\LotteryServiceProvider',
     3 => 'Modules\\Product\\Providers\\ProductServiceProvider',
     4 => 'Modules\\Tester\\Providers\\TesterServiceProvider',
+    5 => 'Modules\\Vendor\\Providers\\VendorServiceProvider',
   ),
   'deferred' => 
   array (

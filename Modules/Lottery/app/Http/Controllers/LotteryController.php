@@ -34,20 +34,27 @@ class LotteryController extends Controller
      */
     public function store(Request $request)
     {
-        
-        // Validation (consider moving to FormRequest for best practice)
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'description' => 'nullable|string',
+            'ticket_price' => 'required|numeric|min:0',
+            'total_tickets' => 'required|integer|min:1',
+            'sold_tickets' => 'nullable|integer|min:0|lte:total_tickets',
+            'start_date' => 'required| date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
+            'product_id' => 'nullable|exists:products,id',
+            'vendor_id' => 'nullable|exists:vendors,id',
+            'status' => 'nullable|in:upcoming,active,completed,cancelled',
         ]);
-        // Convert checkbox to boolean
-        $validated['is_active'] = $request->has('is_active');
-        // Ensure $fillable is set in Lottery model to prevent mass assignment vulnerabilities
-        Lottery::create($validated + [
-            'created_by' => auth()->id()
-        ]);
+        
+        $validated['sold_tickets'] = $validated['sold_tickets'] ?? 0;
+        $validated['created_by'] = auth()->id();
+        
+        // Ensure dates are properly formatted
+        $validated['start_date'] = \Carbon\Carbon::parse($validated['start_date']);
+        $validated['end_date'] = \Carbon\Carbon::parse($validated['end_date']);
+        
+        Lottery::create($validated);
         return redirect()->route('lottery.index')->with('success', 'Lottery created successfully.');
     }
 
@@ -60,7 +67,7 @@ class LotteryController extends Controller
     {
         $lottery = Lottery::findOrFail($id);
         // Reminder: Ensure output is escaped in Blade views
-        return view('lottery::show', compact('lottery'));
+        return view('lottery::admin.show', compact('lottery'));
     }
 
     /**
@@ -69,8 +76,7 @@ class LotteryController extends Controller
     public function edit($id)
     {
         $lottery = Lottery::findOrFail($id);
-        $this->authorize('update', $lottery);
-        return view('lottery::edit', compact('lottery'));
+        return view('lottery::admin.edit', compact('lottery'));
     }
 
     /**
@@ -79,13 +85,19 @@ class LotteryController extends Controller
     public function update(Request $request, $id)
     {
         $lottery = Lottery::findOrFail($id);
-        $this->authorize('update', $lottery);
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'ticket_price' => 'required|numeric|min:0',
+            'total_tickets' => 'required|integer|min:1',
+            'sold_tickets' => 'nullable|integer|min:0|lte:total_tickets',
+            'product_id' => 'nullable|exists:products,id',
+            'vendor_id' => 'nullable|exists:vendors,id',
+            'status' => 'nullable|in:upcoming,active,completed,cancelled',
         ]);
+        $validated['sold_tickets'] = $validated['sold_tickets'] ?? 0;
         $validated['is_active'] = $request->has('is_active');
         $lottery->update($validated);
         return redirect()->route('lottery.index')->with('success', 'Lottery updated successfully.');
@@ -110,5 +122,25 @@ class LotteryController extends Controller
         $lottery = Lottery::findOrFail($id);
         $lottery->delete();
         return redirect()->route('lottery.index')->with('success', 'Lottery deleted successfully.');
+    }
+
+    public function search(Request $request)
+    {
+        $query = Lottery::query();
+        
+        if ($request->search) {
+            $query->where(function($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+        
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+        
+        $lotteries = $query->paginate(15);
+        
+        return view('lottery::admin.table', compact('lotteries'))->render();
     }
 }
