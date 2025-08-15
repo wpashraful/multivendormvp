@@ -35,6 +35,7 @@
                 <li><a href="{{ route('products.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-shopping-cart mr-2"></i>Products</a></li>
                 <li><a href="{{ route('lottery.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-dice mr-2"></i>Lottery</a></li>
                 <li><a href="{{ route('coupon.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-tags mr-2"></i>Coupon</a></li>
+                <li><a href="{{ route('vendors.index') }}" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-store mr-2"></i>Vendors</a></li>
                 <li><a href="#" class="block p-2 rounded hover:bg-gray-700"><i class="fas fa-users mr-2"></i>Users</a></li>
             </ul>
         </aside>

@@ -4,6 +4,7 @@ namespace Modules\Vendor\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Vendor\Models\Vendor;
 
 class VendorController extends Controller
 {
@@ -12,7 +13,8 @@ class VendorController extends Controller
      */
     public function index()
     {
-        return view('vendor::index');
+        $vendors = Vendor::paginate(10);
+        return view('vendor::admin.index', compact('vendors'));
     }
 
     /**
@@ -20,13 +22,29 @@ class VendorController extends Controller
      */
     public function create()
     {
-        return view('vendor::create');
+        
+        return view('vendor::admin.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request) {
+        $data = $request->validate([
+            'business_name' => 'required|string|max:255',
+            'business_email' => 'required|email|unique:vendors,business_email',
+            'business_phone' => 'nullable|string|max:20',
+            'business_address' => 'nullable|string',
+            'logo_url' => 'nullable|url',
+            'banner_url' => 'nullable|url',
+            'business_description' => 'nullable|string',
+            'commission_rate' => 'required|numeric|min:0|max:100',
+            'status' => 'required|in:pending,approved,rejected,suspended'
+        ]);
+        $data['user_id'] = auth()->id();
+        Vendor::create($data);
+        return redirect()->route('vendors.index');
+    }
 
     /**
      * Show the specified resource.
@@ -41,16 +59,37 @@ class VendorController extends Controller
      */
     public function edit($id)
     {
-        return view('vendor::edit');
+        
+        $vendor = Vendor::findOrFail($id);
+        return view('vendor::admin.edit', compact('vendor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, $id) {
+        $vendor = Vendor::findOrFail($id);
+        $data = $request->validate([
+            'business_name' => 'required|string|max:255',
+            'business_email' => 'required|email|unique:vendors,business_email,'.$vendor->id,
+            'business_phone' => 'nullable|string|max:20',
+            'business_address' => 'nullable|string',
+            'logo_url' => 'nullable|url',
+            'banner_url' => 'nullable|url',
+            'business_description' => 'nullable|string',
+            'commission_rate' => 'required|numeric|min:0|max:100',
+            'status' => 'required|in:pending,approved,rejected,suspended'
+        ]);
+        $vendor->update($data);
+        return redirect()->route('vendors.index')->with('success', 'Vendor updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($id) {
+        $vendor = Vendor::findOrFail($id);
+        $vendor->delete();
+        return redirect()->route('vendors.index');
+    }
 }

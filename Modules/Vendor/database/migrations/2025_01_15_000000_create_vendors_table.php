@@ -10,12 +10,16 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->text('address')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->string('business_name');
+            $table->text('business_description')->nullable();
+            $table->string('business_email')->unique();
+            $table->string('business_phone')->nullable();
+            $table->text('business_address')->nullable();
+            $table->string('logo_url')->nullable();
+            $table->string('banner_url')->nullable();
+            $table->decimal('commission_rate', 5, 2)->default(0.00);
+            $table->enum('status', ['pending', 'approved', 'rejected', 'suspended'])->default('pending');
             $table->timestamps();
         });
     }

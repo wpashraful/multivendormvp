@@ -11,16 +11,20 @@ class Vendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'address',
-        'is_active',
-        'user_id'
+        'user_id',
+        'business_name',
+        'business_description',
+        'business_email',
+        'business_phone',
+        'business_address',
+        'logo_url',
+        'banner_url',
+        'commission_rate',
+        'status'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'commission_rate' => 'decimal:2'
     ];
 
     public function user()
